@@ -1,0 +1,21 @@
+version: '3'
+
+networks:
+  kafka_app-net:
+    external: true
+
+services:
+  mailer:
+    container_name: mailer
+    build: .
+    volumes:
+      - .:/app
+    networks:
+      - kafka_app-net
+  mailhog:
+    image: mailhog/mailhog
+    ports: 
+      - 1025:1025
+      - 8025:8025
+    networks:
+      - kafka_app-net

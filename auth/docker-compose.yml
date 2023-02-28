@@ -1,0 +1,14 @@
+version: '3'
+
+networks:
+  kafka_app-net:
+    external: true
+
+services:
+  auth:
+    container_name: auth
+    build: .
+    volumes:
+      - .:/app
+    networks:
+      - kafka_app-net
