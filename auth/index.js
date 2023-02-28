@@ -1,7 +1,18 @@
 const kafkajs = require('kafkajs');
-const fakerjs = require('@faker-js/faker');
+const express = require('express');
+const bodyParser = require('body-parser')
+const postgres = require('postgres');
 
-const faker = fakerjs.faker;
+const db = postgres({
+    host: 'postgres',
+    port: 5432,
+    username: 'postgres',
+    password: 'password',
+    database: 'msdatabase'
+});
+
+const app = express();
+app.use(bodyParser.json());
 
 const kafka = new kafkajs.Kafka({
     clientId: 'email-consumer',
@@ -12,32 +23,37 @@ const kafka = new kafkajs.Kafka({
 
 const producer = kafka.producer();
 
-(async () => {
-    setInterval(async () => {
-        try {
-            const firstName = faker.name.firstName();
-            const lastName = faker.name.lastName();
+app.post('/', async (req, res) => {
+    const { name, email, password } = req.body;
 
-            const user = {
-                name: `${firstName} ${lastName}`,
-                email: faker.internet.email(firstName, lastName).toLowerCase(),
-            }
+    const user = {
+        name,
+        email,
+    };
 
-            await producer.connect();
-            await producer.send({
-                topic: 'email-topic',
-                messages: [
-                    {
-                        value: JSON.stringify(user),
-                    },
-                ],
-            });
+    await db`
+    insert into users
+      (name, email, password)
+    values
+      (${name}, ${email}, ${password})
+    returning name, email
+  `
 
-            console.log(user);
+    await producer.connect();
+    await producer.send({
+        topic: 'email-topic',
+        messages: [
+            {
+                value: JSON.stringify(user),
+            },
+        ],
+    });
 
-            await producer.disconnect();
-        } catch (error) {
-            console.log(error);
-        }
-    }, 2200)
-})();
+    await producer.disconnect();
+
+    res.status(201).end();
+});
+
+app.listen(3000, () => {
+    console.log('Auth service working');
+});
