@@ -25,7 +25,7 @@ const producer = kafka.producer();
 
 app.get('/health', (req, res) => {
     res.status(201).json({
-        status: 'working',
+        status: 'working from node runtime',
         when: new Date().toDateString(),
     });
 });
