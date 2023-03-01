@@ -23,7 +23,14 @@ const kafka = new kafkajs.Kafka({
 
 const producer = kafka.producer();
 
-app.post('/', async (req, res) => {
+app.get('/health', (req, res) => {
+    res.status(201).json({
+        status: 'working',
+        when: new Date().toDateString(),
+    });
+});
+
+app.post('/signup', async (req, res) => {
     const { name, email, password } = req.body;
 
     const user = {
@@ -54,6 +61,6 @@ app.post('/', async (req, res) => {
     res.status(201).end();
 });
 
-app.listen(3000, () => {
+app.listen(3001, () => {
     console.log('Auth service working');
 });

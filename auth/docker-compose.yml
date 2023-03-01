@@ -9,7 +9,7 @@ services:
     container_name: auth
     build: .
     ports:
-      - "3000:3000"
+      - "3001:3001"
     volumes:
       - .:/app
     networks:
