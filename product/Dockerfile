@@ -1,6 +1,9 @@
-FROM golang
-WORKDIR /go/src/github.com/devmeireles/product
-COPY main.go .
-RUN go build main.go
-EXPOSE 3002
-ENTRYPOINT ["./main"]
+FROM node:18
+
+WORKDIR /app
+COPY package*.json .
+RUN npm install \
+  && mv node_modules /node_modules
+COPY . .
+
+CMD npm start
