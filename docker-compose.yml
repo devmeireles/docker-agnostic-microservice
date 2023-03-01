@@ -1,16 +1,55 @@
 version: '3'
 
 networks:
-  kafka_app-net:
+  msnetwork:
     external: true
 
 services:
+  auth:
+    extends:
+      file: ./auth/docker-compose.yml
+      service: auth
+  product:
+    extends:
+      file: ./product/docker-compose.yml
+      service: product
+  mailer:
+    extends:
+      file: ./mailer/docker-compose.yml
+      service: mailer
+  mailhog:
+    extends:
+      file: ./mailer/docker-compose.yml
+      service: mailhog
+  postgres:
+    extends:
+      file: ./database/docker-compose.yml
+      service: postgres
+  pgadmin:
+    extends:
+      file: ./database/docker-compose.yml
+      service: pgadmin
+  kafka:
+    extends:
+      file: ./kafka/docker-compose.yml
+      service: redpanda
+  kafka_console:
+    extends:
+      file: ./kafka/docker-compose.yml
+      service: console
+    depends_on:
+      - kafka
   nginx:
     image: nginx
+    container_name: api_gateway
     ports:
       - "3000:3000"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/index.html:/app/html:ro
     networks:
-      - kafka_app-net
+      - msnetwork
+
+volumes:
+  postgres:
+  pgadmin:

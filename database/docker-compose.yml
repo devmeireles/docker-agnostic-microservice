@@ -1,7 +1,13 @@
 version: '3'
+
+networks:
+  msnetwork:
+    external: true
+
 services:
   postgres:
     image: postgres:13.3
+    container_name: postgres
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: msdatabase
@@ -11,10 +17,10 @@ services:
       - postgres:/var/lib/postgresql/data
       - ./init:/docker-entrypoint-initdb.d
     networks:
-      - postgres
-      - kafka_app-net
+      - msnetwork
   pgadmin:
     image: dpage/pgadmin4:5.2 #@TODO - must know why isn't possible to load servers.json on newest image version
+    container_name: pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@example.com
       PGADMIN_DEFAULT_PASSWORD: password
@@ -24,13 +30,4 @@ services:
       - "pgadmin:/var/lib/pgadmin"
       - "./servers.json:/pgadmin4/servers.json"
     networks:
-      - postgres
-networks:
-  postgres:
-    driver: bridge
-  kafka_app-net:
-    external: true
-
-volumes:
-  postgres:
-  pgadmin:
+      - msnetwork
