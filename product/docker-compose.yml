@@ -1,0 +1,16 @@
+version: '3'
+
+networks:
+  kafka_app-net:
+    external: true
+
+services:
+  product:
+    container_name: product
+    build: .
+    ports:
+      - "3002:3002"
+    volumes:
+      - .:/app
+    networks:
+      - kafka_app-net
