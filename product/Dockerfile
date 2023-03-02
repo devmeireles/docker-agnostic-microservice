@@ -1,9 +1,8 @@
-FROM node:18
-
+FROM python:3.6
+RUN apt-get update
+RUN mkdir /app
 WORKDIR /app
-COPY package*.json .
-RUN npm install \
-  && mv node_modules /node_modules
-COPY . .
-
-CMD npm start
+COPY . /app
+RUN pip install --no-cache-dir -r requirements.txt
+ENV FLASK_ENV="docker"
+CMD [ "flask", "run", "--host=0.0.0.0", "--port=3002" ]
