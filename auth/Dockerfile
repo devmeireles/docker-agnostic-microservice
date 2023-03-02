@@ -10,6 +10,9 @@ COPY . .
 
 CMD [ "npm", "run", "start" ]
 
+# must be reviwed,
+#when using start:prod command it's trying to get app/main folder which doesn't exist
+
 # RUN npm run build
 
 # FROM node:18
