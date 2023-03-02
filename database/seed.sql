@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
   name varchar(64) NOT NULL,
   email varchar(128) NOT NULL,
   password varchar(128) NOT NULL,
+  salt varchar(256) NOT NULL,
   PRIMARY KEY (id)
 );
 
