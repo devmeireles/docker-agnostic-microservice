@@ -25,3 +25,7 @@ docker compose up --build
 [Redpanda Console](http://localhost:8080) - To see topics and messages
 
 [MailHog](http://localhost:8025) - To receive email messages
+
+<br />
+
+![Application Flow](./docs/images/flow.png)
