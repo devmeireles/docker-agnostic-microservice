@@ -5,14 +5,6 @@ networks:
     external: true
 
 services:
-  auth:
-    extends:
-      file: ./auth/docker-compose.yml
-      service: auth
-  product:
-    extends:
-      file: ./product/docker-compose.yml
-      service: product
   mailer:
     extends:
       file: ./mailer/docker-compose.yml
@@ -49,6 +41,22 @@ services:
       - ./nginx/index.html:/app/html:ro
     networks:
       - msnetwork
+  auth:
+    extends:
+      file: ./auth/docker-compose.yml
+      service: auth
+  product:
+    extends:
+      file: ./product/docker-compose.yml
+      service: product
+  php-webserver:
+    extends:
+      file: ./order/docker-compose.yml
+      service: php-webserver
+  order:
+    extends:
+      file: ./order/docker-compose.yml
+      service: order
 
 volumes:
   postgres:
